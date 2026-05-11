@@ -80,6 +80,34 @@ npm run build
 npm test
 ```
 
+## Quick start
+
+Start an opencode server in another terminal:
+
+```bash
+opencode serve --hostname 127.0.0.1 --port 4096
+```
+
+Copy the example environment file and fill in the channel credentials you need:
+
+```bash
+cp .env.example .env
+```
+
+Validate configuration before starting an adapter:
+
+```bash
+npx opencode-channel-telegram --check-config
+npx opencode-channel-discord --check-config
+npx opencode-channel-feishu --check-config
+```
+
+Then run the adapter for your channel:
+
+```bash
+npx opencode-channel-telegram
+```
+
 Copy `.env.example` to `.env` and configure:
 
 ```txt
@@ -276,6 +304,26 @@ git push -u origin main
 ```
 
 No secrets should be committed. Keep `.env` untracked.
+
+## Publishing npm packages
+
+Before publishing, verify the package contents and tests:
+
+```bash
+npm test
+npm pack --dry-run --workspaces
+```
+
+Publish `@opencode-channel/core` first, then the adapter packages because they depend on the matching core version:
+
+```bash
+npm publish --workspace @opencode-channel/core
+npm publish --workspace @opencode-channel/telegram
+npm publish --workspace @opencode-channel/discord
+npm publish --workspace @opencode-channel/feishu
+```
+
+The packages are scoped public packages, so each workspace package sets `publishConfig.access` to `public`.
 
 ## Contributing
 
