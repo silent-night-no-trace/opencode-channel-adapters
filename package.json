@@ -5,6 +5,14 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silent-night-no-trace/opencode-channel-adapters.git"
+  },
+  "bugs": {
+    "url": "https://github.com/silent-night-no-trace/opencode-channel-adapters/issues"
+  },
+  "homepage": "https://github.com/silent-night-no-trace/opencode-channel-adapters#readme",
   "keywords": [
     "opencode",
     "telegram",

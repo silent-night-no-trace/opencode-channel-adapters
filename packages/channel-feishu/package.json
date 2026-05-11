@@ -4,8 +4,27 @@
   "description": "Feishu/Lark adapter for driving opencode sessions from Event Callback messages.",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silent-night-no-trace/opencode-channel-adapters.git",
+    "directory": "packages/channel-feishu"
+  },
+  "bugs": {
+    "url": "https://github.com/silent-night-no-trace/opencode-channel-adapters/issues"
+  },
+  "homepage": "https://github.com/silent-night-no-trace/opencode-channel-adapters/tree/main/packages/channel-feishu#readme",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "opencode-channel-feishu": "dist/cli.js"
   },
@@ -16,9 +35,10 @@
     }
   },
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "prepack": "npm run build"
   },
   "dependencies": {
-    "@opencode-channel/core": "file:../channel-core"
+    "@opencode-channel/core": "^0.1.0"
   }
 }

@@ -4,8 +4,27 @@
   "description": "Discord adapter for driving opencode sessions from Discord channels.",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silent-night-no-trace/opencode-channel-adapters.git",
+    "directory": "packages/channel-discord"
+  },
+  "bugs": {
+    "url": "https://github.com/silent-night-no-trace/opencode-channel-adapters/issues"
+  },
+  "homepage": "https://github.com/silent-night-no-trace/opencode-channel-adapters/tree/main/packages/channel-discord#readme",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "opencode-channel-discord": "dist/cli.js"
   },
@@ -16,10 +35,11 @@
     }
   },
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "prepack": "npm run build"
   },
   "dependencies": {
-    "@opencode-channel/core": "file:../channel-core",
+    "@opencode-channel/core": "^0.1.0",
     "discord.js": "^14.16.3"
   }
 }
