@@ -5,7 +5,7 @@ import {
   mergeConfigWithEnv,
   redactConfig,
   resolveFeishuRuntimeConfig,
-} from "@opencode-channel/core";
+} from "@silent-night-no-trace/core";
 import { createFeishuRuntime } from "./runner.js";
 
 const args = process.argv.slice(2);

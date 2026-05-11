@@ -1,5 +1,5 @@
 {
-  "name": "@opencode-channel/discord",
+  "name": "@silent-night-no-trace/discord",
   "version": "0.1.0",
   "description": "Discord adapter for driving opencode sessions from Discord channels.",
   "license": "MIT",
@@ -39,7 +39,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@opencode-channel/core": "^0.1.0",
+    "@silent-night-no-trace/core": "^0.1.0",
     "discord.js": "^14.16.3"
   }
 }

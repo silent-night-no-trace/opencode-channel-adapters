@@ -222,7 +222,7 @@ npx opencode-channel-telegram
 Or use it as a library:
 
 ```ts
-import { createTelegramPollingRuntime } from "@opencode-channel/telegram";
+import { createTelegramPollingRuntime } from "@silent-night-no-trace/telegram";
 
 const runner = createTelegramPollingRuntime({
   botToken: process.env.TELEGRAM_BOT_TOKEN!,
@@ -238,7 +238,7 @@ await runner.start();
 For webhook mode, keep the HTTP framework outside the adapter and call the runtime with the parsed Telegram update:
 
 ```ts
-import { createTelegramRuntime } from "@opencode-channel/telegram";
+import { createTelegramRuntime } from "@silent-night-no-trace/telegram";
 
 const { runtime, handleUpdate } = createTelegramRuntime({
   botToken: process.env.TELEGRAM_BOT_TOKEN!,
@@ -264,7 +264,7 @@ For Telegram forum topics, `message_thread_id` becomes `threadId`. For normal ch
 
 ## Extension guide for Feishu/Lark
 
-To add a new channel, implement the same small interface from `@opencode-channel/core`:
+To add a new channel, implement the same small interface from `@silent-night-no-trace/core`:
 
 ```ts
 type ChannelAdapter = {
@@ -314,13 +314,13 @@ npm test
 npm pack --dry-run --workspaces
 ```
 
-Publish `@opencode-channel/core` first, then the adapter packages because they depend on the matching core version:
+Publish `@silent-night-no-trace/core` first, then the adapter packages because they depend on the matching core version:
 
 ```bash
-npm publish --workspace @opencode-channel/core
-npm publish --workspace @opencode-channel/telegram
-npm publish --workspace @opencode-channel/discord
-npm publish --workspace @opencode-channel/feishu
+npm publish --workspace @silent-night-no-trace/core
+npm publish --workspace @silent-night-no-trace/telegram
+npm publish --workspace @silent-night-no-trace/discord
+npm publish --workspace @silent-night-no-trace/feishu
 ```
 
 The packages are scoped public packages, so each workspace package sets `publishConfig.access` to `public`.

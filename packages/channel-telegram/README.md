@@ -1,11 +1,11 @@
-# @opencode-channel/telegram
+# @silent-night-no-trace/telegram
 
 Telegram Bot API adapter for driving opencode sessions from Telegram chats.
 
 ## Install
 
 ```bash
-npm install @opencode-channel/telegram
+npm install @silent-night-no-trace/telegram
 ```
 
 ## CLI

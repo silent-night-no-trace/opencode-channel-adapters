@@ -1,11 +1,11 @@
-# @opencode-channel/discord
+# @silent-night-no-trace/discord
 
 Discord adapter for driving opencode sessions from Discord channels.
 
 ## Install
 
 ```bash
-npm install @opencode-channel/discord
+npm install @silent-night-no-trace/discord
 ```
 
 ## CLI

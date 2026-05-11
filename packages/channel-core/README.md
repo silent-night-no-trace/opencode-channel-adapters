@@ -1,11 +1,11 @@
-# @opencode-channel/core
+# @silent-night-no-trace/core
 
 Shared runtime, bridge, storage, and type contracts for opencode channel adapters.
 
 ## Install
 
 ```bash
-npm install @opencode-channel/core
+npm install @silent-night-no-trace/core
 ```
 
 ## What it provides
@@ -19,14 +19,14 @@ npm install @opencode-channel/core
 ## Usage
 
 ```ts
-import { ChannelRuntime, MemorySessionStore, OpencodeHttpBridge } from "@opencode-channel/core";
+import { ChannelRuntime, MemorySessionStore, OpencodeHttpBridge } from "@silent-night-no-trace/core";
 ```
 
 Most users should install a concrete adapter package instead:
 
-- `@opencode-channel/telegram`
-- `@opencode-channel/discord`
-- `@opencode-channel/feishu`
+- `@silent-night-no-trace/telegram`
+- `@silent-night-no-trace/discord`
+- `@silent-night-no-trace/feishu`
 
 ## License
 
