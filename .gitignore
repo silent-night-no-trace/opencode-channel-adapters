@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.sisyphus/
+coverage/
+.env
+.env.*
+!.env.example
+sessions.json
+opencode-channel.json
+opencode-channel.jsonc
+.opencode-channel.json
+.opencode-channel.jsonc
+*.log

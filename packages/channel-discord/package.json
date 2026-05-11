@@ -1,0 +1,25 @@
+{
+  "name": "@opencode-channel/discord",
+  "version": "0.1.0",
+  "description": "Discord adapter for driving opencode sessions from Discord channels.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "opencode-channel-discord": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@opencode-channel/core": "file:../channel-core",
+    "discord.js": "^14.16.3"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/channel-core" },
+    { "path": "./packages/channel-telegram" },
+    { "path": "./packages/channel-discord" },
+    { "path": "./packages/channel-feishu" }
+  ]
+}

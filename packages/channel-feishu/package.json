@@ -1,0 +1,24 @@
+{
+  "name": "@opencode-channel/feishu",
+  "version": "0.1.0",
+  "description": "Feishu/Lark adapter for driving opencode sessions from Event Callback messages.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "opencode-channel-feishu": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@opencode-channel/core": "file:../channel-core"
+  }
+}

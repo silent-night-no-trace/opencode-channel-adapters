@@ -1,0 +1,32 @@
+{
+  "name": "opencode-channel-adapters",
+  "version": "0.1.0",
+  "description": "Channel adapters for bridging opencode sessions into Telegram, Discord, and Feishu/Lark.",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "opencode",
+    "telegram",
+    "discord",
+    "feishu",
+    "lark",
+    "channel-adapter"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b packages/channel-core packages/channel-telegram packages/channel-discord packages/channel-feishu",
+    "clean": "tsc -b --clean packages/channel-core packages/channel-telegram packages/channel-discord packages/channel-feishu",
+    "test": "npm run build && node tests/channel-runtime.test.mjs",
+    "typecheck": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

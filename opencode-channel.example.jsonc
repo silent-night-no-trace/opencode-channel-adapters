@@ -1,0 +1,49 @@
+{
+  // HTTP server started by: opencode serve --hostname 127.0.0.1 --port 4096
+  "opencode": {
+    "baseUrl": "http://127.0.0.1:4096",
+    // Prefer password for local opencode Basic auth. Avoid committing real secrets.
+    "password": "",
+    "authHeader": "",
+    "authToken": ""
+  },
+
+  "storage": {
+    "sessionStore": "./sessions.json"
+  },
+
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "",
+      "allowedChatIds": [],
+      "polling": {
+        "timeoutSeconds": 30,
+        "limit": 25
+      }
+    },
+
+    "feishu": {
+      "enabled": false,
+      "appId": "",
+      "appSecret": "",
+      "encryptKey": "",
+      "verificationToken": "",
+      "allowedChatIds": [],
+      "webhook": {
+        "hostname": "127.0.0.1",
+        "port": 3001,
+        "path": "/feishu/events"
+      }
+    },
+
+    "discord": {
+      "enabled": false,
+      "botToken": "",
+      "applicationId": "",
+      "allowedGuildIds": [],
+      "allowedChannelIds": [],
+      "ignoreBots": true
+    }
+  }
+}
