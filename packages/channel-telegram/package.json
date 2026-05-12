@@ -1,5 +1,5 @@
 {
-  "name": "@silent-night-no-trace/telegram",
+  "name": "@opencode-channel/telegram",
   "version": "0.1.0",
   "description": "Telegram Bot API adapter for driving opencode sessions from Telegram chats.",
   "license": "MIT",
@@ -39,6 +39,6 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@silent-night-no-trace/core": "^0.1.0"
+    "@opencode-channel/core": "^0.1.0"
   }
 }

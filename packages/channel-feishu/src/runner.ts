@@ -3,7 +3,7 @@ import {
   ChannelRuntime,
   JsonFileSessionStore,
   OpencodeHttpBridge,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import { FeishuAdapter, isFeishuChallenge } from "./feishu-adapter.js";
 import type { FeishuEventEnvelope, FeishuWebhookConfig } from "./types.js";
 

@@ -1,5 +1,5 @@
 {
-  "name": "@silent-night-no-trace/feishu",
+  "name": "@opencode-channel/feishu",
   "version": "0.1.0",
   "description": "Feishu/Lark adapter for driving opencode sessions from Event Callback messages.",
   "license": "MIT",
@@ -39,6 +39,6 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@silent-night-no-trace/core": "^0.1.0"
+    "@opencode-channel/core": "^0.1.0"
   }
 }

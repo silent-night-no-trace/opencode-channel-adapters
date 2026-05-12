@@ -5,7 +5,7 @@ import type {
   NormalizedMessage,
   OutboundMessage,
   PermissionRequest,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import { FeishuApi } from "./feishu-api.js";
 import type { FeishuAdapterConfig, FeishuEventEnvelope, FeishuMessageEvent, FeishuTextContent } from "./types.js";
 

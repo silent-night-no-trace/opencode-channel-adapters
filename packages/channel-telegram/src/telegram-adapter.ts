@@ -6,7 +6,7 @@ import type {
   OutboundMessage,
   PermissionResponse,
   PermissionRequest,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import { TelegramApi } from "./telegram-api.js";
 import { isTelegramGetUpdatesConflict } from "./telegram-api.js";
 import type { TelegramAdapterConfig, TelegramInlineKeyboardMarkup, TelegramMessage, TelegramUpdate } from "./types.js";

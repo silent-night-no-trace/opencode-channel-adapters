@@ -5,7 +5,7 @@ import {
   mergeConfigWithEnv,
   redactConfig,
   resolveTelegramRuntimeConfig,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import { createTelegramPollingRuntime } from "./polling-runner.js";
 
 const args = process.argv.slice(2);

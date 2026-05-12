@@ -5,7 +5,7 @@ import {
   mergeConfigWithEnv,
   redactConfig,
   resolveDiscordRuntimeConfig,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import { createDiscordRuntime } from "./runner.js";
 
 const args = process.argv.slice(2);

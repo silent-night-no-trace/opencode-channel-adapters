@@ -6,7 +6,7 @@ import type {
   OutboundMessage,
   PermissionRequest,
   PermissionResponse,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import {
   ActionRowBuilder,
   ButtonBuilder,

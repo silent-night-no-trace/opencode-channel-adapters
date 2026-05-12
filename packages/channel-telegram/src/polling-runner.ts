@@ -3,7 +3,7 @@ import {
   JsonFileSessionStore,
   type NormalizedMessage,
   OpencodeHttpBridge,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import { TelegramAdapter } from "./telegram-adapter.js";
 
 export type TelegramPollingRunnerOptions = {

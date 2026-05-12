@@ -1,11 +1,11 @@
-# @silent-night-no-trace/feishu
+# @opencode-channel/feishu
 
 Feishu/Lark Event Callback webhook adapter for driving opencode sessions from Feishu or Lark chats.
 
 ## Install
 
 ```bash
-npm install @silent-night-no-trace/feishu
+npm install @opencode-channel/feishu
 ```
 
 ## CLI

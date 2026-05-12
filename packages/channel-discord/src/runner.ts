@@ -2,7 +2,7 @@ import {
   ChannelRuntime,
   JsonFileSessionStore,
   OpencodeHttpBridge,
-} from "@silent-night-no-trace/core";
+} from "@opencode-channel/core";
 import { DiscordAdapter } from "./discord-adapter.js";
 
 export type DiscordRunnerOptions = {
