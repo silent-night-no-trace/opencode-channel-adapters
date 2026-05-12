@@ -1,5 +1,11 @@
 # opencode Channel Adapters
 
+[![CI](https://github.com/silent-night-no-trace/opencode-channel-adapters/actions/workflows/ci.yml/badge.svg)](https://github.com/silent-night-no-trace/opencode-channel-adapters/actions/workflows/ci.yml)
+[![npm core](https://img.shields.io/npm/v/@opencode-channel/core?label=%40opencode-channel%2Fcore)](https://www.npmjs.com/package/@opencode-channel/core)
+[![npm telegram](https://img.shields.io/npm/v/@opencode-channel/telegram?label=%40opencode-channel%2Ftelegram)](https://www.npmjs.com/package/@opencode-channel/telegram)
+[![license](https://img.shields.io/npm/l/@opencode-channel/core)](./LICENSE)
+[![node](https://img.shields.io/node/v/@opencode-channel/core)](https://www.npmjs.com/package/@opencode-channel/core)
+
 Run opencode from chat platforms. This repository contains channel adapters for Telegram, Discord, and Feishu/Lark, plus a shared core runtime.
 
 The quickest way to try it is to run a published npm package with `npx -y -p`. If you want to change code or test local builds, clone the repository and build from source.
