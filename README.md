@@ -221,30 +221,36 @@ npm run build
 npm test
 ```
 
-Run local CLIs from the repository root after building:
+After `npm install`, npm links workspace binaries into `node_modules/.bin`. From the repository root, run local CLIs with `npx --no-install` so npm uses the local build instead of downloading a registry package:
 
 ```bash
-node packages/channel-telegram/dist/cli.js --help
-node packages/channel-telegram/dist/cli.js --check-config
-node packages/channel-telegram/dist/cli.js
+npx --no-install opencode-channel-telegram --help
+npx --no-install opencode-channel-telegram --check-config
+npx --no-install opencode-channel-telegram
 ```
 
 Discord and Feishu/Lark use the same pattern:
 
 ```bash
-node packages/channel-discord/dist/cli.js --check-config
-node packages/channel-discord/dist/cli.js
+npx --no-install opencode-channel-discord --check-config
+npx --no-install opencode-channel-discord
 
-node packages/channel-feishu/dist/cli.js --check-config
-node packages/channel-feishu/dist/cli.js
+npx --no-install opencode-channel-feishu --check-config
+npx --no-install opencode-channel-feishu
 ```
 
-To make local workspace binaries available as commands during development:
+If you want the local workspace commands available outside this repository, link them globally during development:
 
 ```bash
 npm link --workspace @opencode-channel/telegram
 npm link --workspace @opencode-channel/discord
 npm link --workspace @opencode-channel/feishu
+```
+
+You can still run the built files directly if you need to bypass npm's bin resolution:
+
+```bash
+node packages/channel-telegram/dist/cli.js --help
 ```
 
 Generated artifacts such as `dist/`, `*.tsbuildinfo`, `node_modules/`, local session stores, and local channel config files are intentionally ignored.
