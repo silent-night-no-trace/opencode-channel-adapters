@@ -100,19 +100,19 @@ $env:TELEGRAM_ALLOWED_CHAT_IDS = "123456789,-1001234567890"
 Run the built-in Telegram doctor before polling:
 
 ```powershell
-npx opencode-channel-telegram --doctor
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --doctor
 ```
 
 If `url` is not empty, Telegram is still configured for webhook delivery and long polling will not receive messages. Clear it with:
 
 ```powershell
-npx opencode-channel-telegram --delete-webhook
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --delete-webhook
 ```
 
 If you want to drop old pending updates as well:
 
 ```powershell
-npx opencode-channel-telegram --delete-webhook --drop-pending-updates
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --delete-webhook --drop-pending-updates
 ```
 
 ## 4. Run the Telegram adapter in polling mode
@@ -129,9 +129,9 @@ You can configure the adapter with a file instead of only environment variables:
 New-Item -ItemType Directory -Force "$HOME\.config\opencode"
 Copy-Item .\opencode-channel.example.jsonc "$HOME\.config\opencode\opencode-channel.jsonc"
 notepad "$HOME\.config\opencode\opencode-channel.jsonc"
-npx opencode-channel-telegram --check-config
-npx opencode-channel-telegram --print-config
-npx opencode-channel-telegram
+node packages/channel-telegram/dist/cli.js --check-config
+node packages/channel-telegram/dist/cli.js --print-config
+node packages/channel-telegram/dist/cli.js
 ```
 
 The same config file can hold future `channels.feishu` and `channels.discord` settings. The default location is `~/.config/opencode/opencode-channel.json` or `~/.config/opencode/opencode-channel.jsonc`; commit only `opencode-channel.example.jsonc`.
@@ -139,15 +139,15 @@ The same config file can hold future `channels.feishu` and `channels.discord` se
 For Discord, fill `channels.discord.botToken`, enable the Message Content intent in the Discord Developer Portal, then run:
 
 ```powershell
-npx opencode-channel-discord --check-config
-npx opencode-channel-discord
+node packages/channel-discord/dist/cli.js --check-config
+node packages/channel-discord/dist/cli.js
 ```
 
 For Feishu/Lark, fill `channels.feishu.appId`, `channels.feishu.appSecret`, and optionally `channels.feishu.verificationToken`, then run:
 
 ```powershell
-npx opencode-channel-feishu --check-config
-npx opencode-channel-feishu
+node packages/channel-feishu/dist/cli.js --check-config
+node packages/channel-feishu/dist/cli.js
 ```
 
 The Feishu webhook server defaults to `http://127.0.0.1:3001/feishu/events`. Use a tunnel such as ngrok/cloudflared for local Event Callback debugging.
@@ -169,7 +169,7 @@ $env:OPENCODE_PASSWORD = "your-opencode-password"
 Start:
 
 ```powershell
-npx opencode-channel-telegram --debug
+node packages/channel-telegram/dist/cli.js --debug
 ```
 
 Expected output:
@@ -240,12 +240,12 @@ The fixture tests cover:
 
 ### `TELEGRAM_BOT_TOKEN is required`
 
-Set the token in the same shell before running `npx opencode-channel-telegram`.
+Set the token in the same shell before running `node packages/channel-telegram/dist/cli.js` or the published npm command from the main README.
 
 ### Telegram polling returns no messages
 
-- Run `npx opencode-channel-telegram --doctor`; `url` must be empty for polling.
-- Run `npx opencode-channel-telegram --delete-webhook` before polling.
+- Run `npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --doctor`; `url` must be empty for polling.
+- Run `npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --delete-webhook` before polling.
 - Make sure the bot received at least one new message after startup.
 - Clear webhooks with `deleteWebhook`; polling and webhook delivery are mutually exclusive.
 - In groups, mention the bot or disable BotFather privacy mode for broader group messages.
@@ -259,7 +259,7 @@ Observed local case:
 
 ```powershell
 Remove-Item .\sessions.json -ErrorAction SilentlyContinue
-npx opencode-channel-telegram --debug
+node packages/channel-telegram/dist/cli.js --debug
 ```
 
 The adapter started normally and connected to opencode events:
@@ -296,7 +296,7 @@ Stop-Process -Id <ProcessId>
 Then start only one adapter instance:
 
 ```powershell
-npx opencode-channel-telegram --debug
+node packages/channel-telegram/dist/cli.js --debug
 ```
 
 `--delete-webhook` does not fix this specific error when `--doctor` already shows `url: ""`; the conflict is another polling process.

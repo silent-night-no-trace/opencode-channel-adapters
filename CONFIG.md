@@ -206,31 +206,31 @@ discord:<channelId>:<threadId-or-default>
 Check config without connecting to Telegram:
 
 ```powershell
-npx opencode-channel-telegram --check-config
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --check-config
 ```
 
 Check Discord config without connecting to Discord:
 
 ```powershell
-npx opencode-channel-discord --check-config
+npx -y -p @opencode-channel/discord@latest opencode-channel-discord --check-config
 ```
 
 Check Feishu config without starting the webhook server:
 
 ```powershell
-npx opencode-channel-feishu --check-config
+npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu --check-config
 ```
 
 Print the merged config with secrets redacted:
 
 ```powershell
-npx opencode-channel-telegram --print-config
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --print-config
 ```
 
 Use a non-default config file:
 
 ```powershell
-npx opencode-channel-telegram --config .\path\to\opencode-channel.jsonc --check-config
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --config .\path\to\opencode-channel.jsonc --check-config
 ```
 
 ## Secret handling

@@ -2,18 +2,28 @@
 
 Feishu/Lark Event Callback webhook adapter for driving opencode sessions from Feishu or Lark chats.
 
-## Install
+## Run without installing
 
 ```bash
-npm install @opencode-channel/feishu
+npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu --help
+npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu --check-config
+npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu
 ```
 
-## CLI
+`-p @opencode-channel/feishu@latest` tells npm which scoped package to download before running the `opencode-channel-feishu` binary.
+
+## Install permanently
 
 ```bash
-npx opencode-channel-feishu --help
-npx opencode-channel-feishu --check-config
-npx opencode-channel-feishu
+npm install -g @opencode-channel/feishu@latest
+opencode-channel-feishu --help
+```
+
+Or install into a project and run from that project:
+
+```bash
+npm install @opencode-channel/feishu@latest
+npx --no-install opencode-channel-feishu --help
 ```
 
 Required configuration:

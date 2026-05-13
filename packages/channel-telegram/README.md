@@ -2,18 +2,28 @@
 
 Telegram Bot API adapter for driving opencode sessions from Telegram chats.
 
-## Install
+## Run without installing
 
 ```bash
-npm install @opencode-channel/telegram
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --help
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --check-config
+npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram
 ```
 
-## CLI
+`-p @opencode-channel/telegram@latest` tells npm which scoped package to download before running the `opencode-channel-telegram` binary.
+
+## Install permanently
 
 ```bash
-npx opencode-channel-telegram --help
-npx opencode-channel-telegram --check-config
-npx opencode-channel-telegram
+npm install -g @opencode-channel/telegram@latest
+opencode-channel-telegram --help
+```
+
+Or install into a project and run from that project:
+
+```bash
+npm install @opencode-channel/telegram@latest
+npx --no-install opencode-channel-telegram --help
 ```
 
 Required configuration:
