@@ -1,6 +1,6 @@
 {
   "name": "@opencode-channel/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared runtime, bridge, and adapter contracts for opencode channel integrations.",
   "license": "MIT",
   "type": "module",

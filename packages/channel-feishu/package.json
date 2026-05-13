@@ -1,6 +1,6 @@
 {
   "name": "@opencode-channel/feishu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Feishu/Lark adapter for driving opencode sessions from Event Callback messages.",
   "license": "MIT",
   "type": "module",
@@ -39,6 +39,6 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@opencode-channel/core": "^0.1.0"
+    "@opencode-channel/core": "^0.1.1"
   }
 }

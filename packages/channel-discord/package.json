@@ -1,6 +1,6 @@
 {
   "name": "@opencode-channel/discord",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Discord adapter for driving opencode sessions from Discord channels.",
   "license": "MIT",
   "type": "module",
@@ -39,7 +39,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@opencode-channel/core": "^0.1.0",
+    "@opencode-channel/core": "^0.1.1",
     "discord.js": "^14.16.3"
   }
 }

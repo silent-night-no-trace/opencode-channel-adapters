@@ -1,6 +1,6 @@
 {
   "name": "@opencode-channel/telegram",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Telegram Bot API adapter for driving opencode sessions from Telegram chats.",
   "license": "MIT",
   "type": "module",
@@ -39,6 +39,6 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@opencode-channel/core": "^0.1.0"
+    "@opencode-channel/core": "^0.1.1"
   }
 }
