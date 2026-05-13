@@ -55,15 +55,37 @@ npx -y -p @opencode-channel/discord opencode-channel-discord --help
 npx -y -p @opencode-channel/feishu opencode-channel-feishu --help
 ```
 
-### Run Telegram from npm
+### Run Telegram from zero to one
 
-1. Start opencode:
+Use this path when you have a fresh machine, a new Telegram bot, and only want to run the published npm package.
+
+1. Install prerequisites:
+
+```bash
+node --version
+npm --version
+opencode --version
+```
+
+Node.js must be 20 or newer. If `opencode --version` is not available, install or configure opencode first.
+
+2. Create a Telegram bot:
+
+- Open Telegram and start a chat with `@BotFather`.
+- Send `/newbot`, follow the prompts, and copy the bot token.
+- Send one message to the new bot so Telegram creates an update for it.
+
+3. Start opencode in one terminal:
 
 ```bash
 opencode serve --hostname 127.0.0.1 --port 4096
 ```
 
-2. Set credentials in the same shell that will run the adapter:
+Keep this terminal running. The adapter sends user messages to this HTTP server.
+
+4. In a second terminal, set the required environment variables.
+
+macOS/Linux:
 
 ```bash
 export TELEGRAM_BOT_TOKEN="123456:bot-token"
@@ -77,25 +99,62 @@ $env:TELEGRAM_BOT_TOKEN = "123456:bot-token"
 $env:OPENCODE_BASE_URL = "http://127.0.0.1:4096"
 ```
 
-3. Validate config without connecting to Telegram:
+5. Optional: restrict access to one or more Telegram chats.
+
+First discover the chat id after you have messaged the bot:
+
+```bash
+curl "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getUpdates"
+```
+
+PowerShell:
+
+```powershell
+Invoke-RestMethod -Uri "https://api.telegram.org/bot$env:TELEGRAM_BOT_TOKEN/getUpdates"
+```
+
+Look for `result[].message.chat.id`, then set:
+
+```bash
+export TELEGRAM_ALLOWED_CHAT_IDS="123456789"
+```
+
+PowerShell:
+
+```powershell
+$env:TELEGRAM_ALLOWED_CHAT_IDS = "123456789"
+```
+
+If you skip this, the adapter accepts messages from any chat that can reach the bot.
+
+6. Validate local configuration without connecting to Telegram polling:
 
 ```bash
 npx -y -p @opencode-channel/telegram opencode-channel-telegram --check-config
 ```
 
-4. If this Telegram bot previously used a webhook, clear it before polling:
+7. Clear Telegram webhook mode before polling:
 
 ```bash
 npx -y -p @opencode-channel/telegram opencode-channel-telegram --delete-webhook
 ```
 
-5. Start polling:
+This is safe for polling mode and prevents Telegram from rejecting `getUpdates` because a webhook is still active.
+
+8. Start the adapter:
 
 ```bash
 npx -y -p @opencode-channel/telegram opencode-channel-telegram
 ```
 
-For Telegram bot setup, chat IDs, webhook checks, debug logging, and polling conflicts, see [`DEBUG.md`](./DEBUG.md).
+Send a message to your Telegram bot. You should see adapter logs in the second terminal and opencode activity in the first terminal.
+
+For repeated use, install the CLI globally:
+
+```bash
+npm install -g @opencode-channel/telegram
+opencode-channel-telegram
+```
 
 ### Run Discord from npm
 
