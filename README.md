@@ -10,6 +10,23 @@ Run [opencode](https://opencode.ai/) from Telegram, Discord, or Feishu/Lark.
 
 The fastest path is to run the published npm packages directly. You do **not** need to clone this repository or run `npm install` unless you want to develop the adapters.
 
+## Before you start
+
+You need:
+
+- Node.js 20 or newer.
+- npm.
+- `opencode` available in your shell.
+- A bot/app credential for the chat platform you want to connect.
+
+Check the local tools first:
+
+```bash
+node --version
+npm --version
+opencode --version
+```
+
 ## Run from npm
 
 Use `npx -y -p <package> <binary>` for one-off runs. The `-p` flag tells npm which scoped package to download, then runs the unscoped CLI binary from that package.
@@ -19,6 +36,8 @@ Use `npx -y -p <package> <binary>` for one-off runs. The `-p` flag tells npm whi
 | Telegram | `npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --help` |
 | Discord | `npx -y -p @opencode-channel/discord@latest opencode-channel-discord --help` |
 | Feishu/Lark | `npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu --help` |
+
+Use this `npx -p` form when you are trying the adapter or copying commands from this README. If you install a package globally later, you can run the shorter binary name directly, for example `opencode-channel-telegram`.
 
 ## Telegram quick start
 
