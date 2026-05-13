@@ -203,34 +203,36 @@ discord:<channelId>:<threadId-or-default>
 
 ## Debug commands
 
+These commands assume you installed the matching CLI globally, for example `npm install -g @opencode-channel/telegram@latest`.
+
 Check config without connecting to Telegram:
 
 ```powershell
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --check-config
+opencode-channel-telegram --check-config
 ```
 
 Check Discord config without connecting to Discord:
 
 ```powershell
-npx -y -p @opencode-channel/discord@latest opencode-channel-discord --check-config
+opencode-channel-discord --check-config
 ```
 
 Check Feishu config without starting the webhook server:
 
 ```powershell
-npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu --check-config
+opencode-channel-feishu --check-config
 ```
 
 Print the merged config with secrets redacted:
 
 ```powershell
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --print-config
+opencode-channel-telegram --print-config
 ```
 
 Use a non-default config file:
 
 ```powershell
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --config .\path\to\opencode-channel.jsonc --check-config
+opencode-channel-telegram --config .\path\to\opencode-channel.jsonc --check-config
 ```
 
 ## Secret handling

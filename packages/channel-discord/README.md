@@ -2,21 +2,13 @@
 
 Discord adapter for driving opencode sessions from Discord channels.
 
-## Run without installing
-
-```bash
-npx -y -p @opencode-channel/discord@latest opencode-channel-discord --help
-npx -y -p @opencode-channel/discord@latest opencode-channel-discord --check-config
-npx -y -p @opencode-channel/discord@latest opencode-channel-discord
-```
-
-`-p @opencode-channel/discord@latest` tells npm which scoped package to download before running the `opencode-channel-discord` binary.
-
-## Install permanently
+## Install
 
 ```bash
 npm install -g @opencode-channel/discord@latest
 opencode-channel-discord --help
+opencode-channel-discord --check-config
+opencode-channel-discord
 ```
 
 Or install into a project and run from that project:

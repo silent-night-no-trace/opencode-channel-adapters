@@ -4,6 +4,12 @@ This guide connects the current Telegram adapter to a running opencode server an
 
 For every config field, see [`CONFIG.md`](./CONFIG.md).
 
+Commands such as `opencode-channel-telegram` assume you installed the CLI globally:
+
+```powershell
+npm install -g @opencode-channel/telegram@latest
+```
+
 ## 1. Verify the adapter locally
 
 ```powershell
@@ -100,19 +106,19 @@ $env:TELEGRAM_ALLOWED_CHAT_IDS = "123456789,-1001234567890"
 Run the built-in Telegram doctor before polling:
 
 ```powershell
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --doctor
+opencode-channel-telegram --doctor
 ```
 
 If `url` is not empty, Telegram is still configured for webhook delivery and long polling will not receive messages. Clear it with:
 
 ```powershell
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --delete-webhook
+opencode-channel-telegram --delete-webhook
 ```
 
 If you want to drop old pending updates as well:
 
 ```powershell
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --delete-webhook --drop-pending-updates
+opencode-channel-telegram --delete-webhook --drop-pending-updates
 ```
 
 ## 4. Run the Telegram adapter in polling mode
@@ -244,8 +250,8 @@ Set the token in the same shell before running `node packages/channel-telegram/d
 
 ### Telegram polling returns no messages
 
-- Run `npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --doctor`; `url` must be empty for polling.
-- Run `npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --delete-webhook` before polling.
+- Run `opencode-channel-telegram --doctor`; `url` must be empty for polling.
+- Run `opencode-channel-telegram --delete-webhook` before polling.
 - Make sure the bot received at least one new message after startup.
 - Clear webhooks with `deleteWebhook`; polling and webhook delivery are mutually exclusive.
 - In groups, mention the bot or disable BotFather privacy mode for broader group messages.

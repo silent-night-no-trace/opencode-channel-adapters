@@ -27,17 +27,22 @@ npm --version
 opencode --version
 ```
 
-## Run from npm
+## Install an adapter CLI
 
-Use `npx -y -p <package> <binary>` for one-off runs. The `-p` flag tells npm which scoped package to download, then runs the unscoped CLI binary from that package.
+Install the adapter for the chat platform you want to use:
 
-| Channel | One-off command |
-|---|---|
-| Telegram | `npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --help` |
-| Discord | `npx -y -p @opencode-channel/discord@latest opencode-channel-discord --help` |
-| Feishu/Lark | `npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu --help` |
+| Channel | Install | CLI command |
+|---|---|---|
+| Telegram | `npm install -g @opencode-channel/telegram@latest` | `opencode-channel-telegram` |
+| Discord | `npm install -g @opencode-channel/discord@latest` | `opencode-channel-discord` |
+| Feishu/Lark | `npm install -g @opencode-channel/feishu@latest` | `opencode-channel-feishu` |
 
-Use this `npx -p` form when you are trying the adapter or copying commands from this README. If you install a package globally later, you can run the shorter binary name directly, for example `opencode-channel-telegram`.
+For example, install and check Telegram:
+
+```bash
+npm install -g @opencode-channel/telegram@latest
+opencode-channel-telegram --help
+```
 
 ## Telegram quick start
 
@@ -85,7 +90,7 @@ If your opencode server requires Basic auth, also set `OPENCODE_PASSWORD` in the
 ### 4. Validate config
 
 ```bash
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --check-config
+opencode-channel-telegram --check-config
 ```
 
 ### 5. Clear Telegram webhook mode
@@ -93,13 +98,13 @@ npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --check-co
 Telegram bots cannot use webhook delivery and polling at the same time. This command is safe for a new bot too.
 
 ```bash
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram --delete-webhook
+opencode-channel-telegram --delete-webhook
 ```
 
 ### 6. Start polling
 
 ```bash
-npx -y -p @opencode-channel/telegram@latest opencode-channel-telegram
+opencode-channel-telegram
 ```
 
 Keep terminal 1 and terminal 2 open. Send a message to your Telegram bot. The adapter forwards that message to opencode and sends the opencode response back to Telegram.
@@ -107,13 +112,14 @@ Keep terminal 1 and terminal 2 open. Send a message to your Telegram bot. The ad
 ## Discord quick start
 
 ```bash
+npm install -g @opencode-channel/discord@latest
 opencode serve --hostname 127.0.0.1 --port 4096
 
 export DISCORD_BOT_TOKEN="discord-bot-token"
 export OPENCODE_BASE_URL="http://127.0.0.1:4096"
 
-npx -y -p @opencode-channel/discord@latest opencode-channel-discord --check-config
-npx -y -p @opencode-channel/discord@latest opencode-channel-discord
+opencode-channel-discord --check-config
+opencode-channel-discord
 ```
 
 PowerShell users can set `$env:DISCORD_BOT_TOKEN` and `$env:OPENCODE_BASE_URL` instead.
@@ -121,32 +127,24 @@ PowerShell users can set `$env:DISCORD_BOT_TOKEN` and `$env:OPENCODE_BASE_URL` i
 ## Feishu/Lark quick start
 
 ```bash
+npm install -g @opencode-channel/feishu@latest
 opencode serve --hostname 127.0.0.1 --port 4096
 
 export FEISHU_APP_ID="cli_xxx"
 export FEISHU_APP_SECRET="app-secret"
 export OPENCODE_BASE_URL="http://127.0.0.1:4096"
 
-npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu --check-config
-npx -y -p @opencode-channel/feishu@latest opencode-channel-feishu
+opencode-channel-feishu --check-config
+opencode-channel-feishu
 ```
 
 PowerShell users can set `$env:FEISHU_APP_ID`, `$env:FEISHU_APP_SECRET`, and `$env:OPENCODE_BASE_URL` instead.
 
 The built-in Feishu webhook defaults to `http://127.0.0.1:3001/feishu/events`; expose it with a tunnel when configuring Feishu Event Callback in the developer console.
 
-## Install permanently
+## Other install options
 
-For repeated local use, install the CLI package globally:
-
-```bash
-npm install -g @opencode-channel/telegram@latest
-opencode-channel-telegram --help
-opencode-channel-telegram --check-config
-opencode-channel-telegram
-```
-
-Install the package for the channel you need:
+Install all adapter CLIs globally:
 
 ```bash
 npm install -g @opencode-channel/telegram@latest
