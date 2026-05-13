@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import http from "node:http";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -29,6 +30,8 @@ await testPermissionCallback();
 await testTelegramSessionSelectionCallback();
 await testTelegramPollingConflictDetection();
 await testOpencodeHttpBridgeShapes();
+await testOpencodeHttpBridgeUsesLongPromptDispatcher();
+await testOpencodeHttpBridgeWaitsForSlowPromptHeaders();
 await testFeishuApiShapes();
 await testConfigFileAndEnvMerge();
 await testDefaultConfigHomePrecedence();
@@ -400,6 +403,56 @@ async function testOpencodeHttpBridgeShapes() {
   });
   assert.equal(await basicBridge.createSession({ title: "basic" }), "session-basic");
   assert.equal(basicCalls[0].headers.authorization, `Basic ${Buffer.from("opencode:pw").toString("base64")}`);
+}
+
+async function testOpencodeHttpBridgeUsesLongPromptDispatcher() {
+  const calls = [];
+  const bridge = new OpencodeHttpBridge({
+    baseUrl: "http://opencode.local",
+    fetchImpl: async (url, init) => {
+      calls.push({ url: String(url), dispatcher: init?.dispatcher });
+      return jsonResponse({
+        info: { content: "slow response" },
+        parts: [{ type: "text", text: "slow response" }],
+      });
+    },
+  });
+
+  const result = await bridge.prompt({ sessionId: "session-1", text: "slow prompt" });
+
+  assert.equal(result.text, "slow response");
+  assert.equal(calls[0].url, "http://opencode.local/session/session-1/message");
+  assert.equal(typeof calls[0].dispatcher?.dispatch, "function");
+}
+
+async function testOpencodeHttpBridgeWaitsForSlowPromptHeaders() {
+  const server = http.createServer((request, response) => {
+    if (request.url === "/session/session-1/message") {
+      setTimeout(() => {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify({ parts: [{ type: "text", text: "slow response" }] }));
+      }, 1100);
+      return;
+    }
+
+    response.writeHead(404, { "content-type": "application/json" });
+    response.end(JSON.stringify({ error: "not found" }));
+  });
+
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const address = server.address();
+    assert.ok(address && typeof address === "object");
+    const bridge = new OpencodeHttpBridge({ baseUrl: `http://127.0.0.1:${address.port}` });
+
+    const result = await bridge.prompt({ sessionId: "session-1", text: "slow prompt" });
+
+    assert.equal(result.text, "slow response");
+  } finally {
+    await new Promise((resolve, reject) => {
+      server.close((error) => error ? reject(error) : resolve());
+    });
+  }
 }
 
 async function testFeishuApiShapes() {

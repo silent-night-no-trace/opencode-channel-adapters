@@ -1,3 +1,4 @@
+import { Agent, type Dispatcher } from "undici";
 import type {
   OpencodeBridge,
   OpencodeEvent,
@@ -15,15 +16,25 @@ export type OpencodeHttpBridgeOptions = {
   authHeader?: string;
   password?: string;
   fetchImpl?: typeof fetch;
+  dispatcher?: Dispatcher;
+};
+
+type UndiciFetchInit = RequestInit & {
+  dispatcher?: Dispatcher;
 };
 
 export class OpencodeHttpBridge implements OpencodeBridge {
   private readonly baseUrl: string;
   private readonly fetchImpl: typeof fetch;
+  private readonly dispatcher: Dispatcher;
 
   constructor(private readonly options: OpencodeHttpBridgeOptions) {
     this.baseUrl = options.baseUrl.replace(/\/$/, "");
     this.fetchImpl = options.fetchImpl ?? fetch;
+    this.dispatcher = options.dispatcher ?? new Agent({
+      headersTimeout: 0,
+      bodyTimeout: 0,
+    });
   }
 
   async createSession(input: OpencodeSessionInput): Promise<SessionId> {
@@ -115,7 +126,8 @@ export class OpencodeHttpBridge implements OpencodeBridge {
     const authHeader = resolveAuthHeader(this.options);
     if (authHeader) headers.set("authorization", authHeader);
 
-    const response = await this.fetchImpl(`${this.baseUrl}${path}`, { ...init, headers });
+    const requestInit: UndiciFetchInit = { ...init, headers, dispatcher: this.dispatcher };
+    const response = await this.fetchImpl(`${this.baseUrl}${path}`, requestInit);
     if (!response.ok) {
       const body = await response.text();
       throw new Error(`opencode request failed ${response.status}: ${body}`);

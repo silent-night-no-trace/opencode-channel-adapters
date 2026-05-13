@@ -34,5 +34,8 @@
   "scripts": {
     "build": "tsc -b",
     "prepack": "npm run build"
+  },
+  "dependencies": {
+    "undici": "^6.24.1"
   }
 }
