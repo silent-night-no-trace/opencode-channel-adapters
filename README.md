@@ -142,6 +142,29 @@ PowerShell users can set `$env:FEISHU_APP_ID`, `$env:FEISHU_APP_SECRET`, and `$e
 
 The built-in Feishu webhook defaults to `http://127.0.0.1:3001/feishu/events`; expose it with a tunnel when configuring Feishu Event Callback in the developer console.
 
+## Run multiple adapters with one opencode server
+
+Yes. One `opencode serve` process can be shared by multiple adapters. Each adapter is a separate client process that talks to the same `OPENCODE_BASE_URL`.
+
+For example, run these in separate terminals or process-manager services:
+
+```bash
+# terminal 1: shared opencode HTTP server
+opencode serve --hostname 127.0.0.1 --port 4096
+
+# terminal 2: Telegram adapter
+export TELEGRAM_BOT_TOKEN="123456:bot-token"
+export OPENCODE_BASE_URL="http://127.0.0.1:4096"
+opencode-channel-telegram
+
+# terminal 3: Discord adapter
+export DISCORD_BOT_TOKEN="discord-bot-token"
+export OPENCODE_BASE_URL="http://127.0.0.1:4096"
+opencode-channel-discord
+```
+
+Telegram chats and Discord channels are stored under different session keys, so they can share the same `CHANNEL_SESSION_STORE` file. If you prefer operational isolation, set a different `CHANNEL_SESSION_STORE` value for each adapter process.
+
 ## Other install options
 
 Install all adapter CLIs globally:
@@ -221,7 +244,7 @@ npm run build
 npm test
 ```
 
-After `npm install`, npm links workspace binaries into `node_modules/.bin`. From the repository root, run local CLIs with `npx --no-install` so npm uses the local build instead of downloading a registry package:
+After `npm install`, npm links workspace binaries into `node_modules/.bin`. From the repository root, run local CLIs with `npx --no-install` so npm must use the local workspace build and fails fast if the binary is missing:
 
 ```bash
 npx --no-install opencode-channel-telegram --help
@@ -238,6 +261,8 @@ npx --no-install opencode-channel-discord
 npx --no-install opencode-channel-feishu --check-config
 npx --no-install opencode-channel-feishu
 ```
+
+Do not treat `npx --no-install opencode-channel-telegram --help` as equivalent to `npx opencode-channel-telegram --help` during local development. Plain `npx` may install or run a package from the npm registry when it cannot resolve a local binary; `--no-install` prevents that and proves you are testing this checkout.
 
 If you want the local workspace commands available outside this repository, link them globally during development:
 
