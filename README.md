@@ -345,3 +345,7 @@ tests                       Runtime regression tests
 ## License
 
 MIT
+
+## Friendly Links
+
+- [linux.do](https://linux.do/)
