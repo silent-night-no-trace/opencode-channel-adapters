@@ -7,9 +7,12 @@ import type {
   PermissionResponse,
   PermissionRequest,
 } from "@opencode-channel/core";
+import { setTimeout as sleep } from "node:timers/promises";
 import { TelegramApi } from "./telegram-api.js";
 import { isTelegramGetUpdatesConflict } from "./telegram-api.js";
 import type { TelegramAdapterConfig, TelegramInlineKeyboardMarkup, TelegramMessage, TelegramUpdate } from "./types.js";
+
+const DEFAULT_POLLING_RETRY_DELAY_MS = 5_000;
 
 export class TelegramAdapter implements ChannelAdapter {
   readonly id = "telegram";
@@ -19,7 +22,10 @@ export class TelegramAdapter implements ChannelAdapter {
   private readonly allowedChatIds: Set<string> | undefined;
 
   constructor(private readonly config: TelegramAdapterConfig) {
-    this.api = new TelegramApi(config.botToken, config.fetchImpl);
+    this.api = new TelegramApi(config.botToken, {
+      ...(config.fetchImpl ? { fetchImpl: config.fetchImpl } : {}),
+      ...(config.proxyUrl ? { proxyUrl: config.proxyUrl } : {}),
+    });
     this.allowedChatIds = config.allowedChatIds ? new Set(config.allowedChatIds) : undefined;
   }
 
@@ -183,13 +189,27 @@ export class TelegramAdapter implements ChannelAdapter {
     this.pollingAbort = abort;
 
     while (!abort.signal.aborted) {
-      const updates = await this.getUpdatesOrThrowFriendlyConflict();
+      const updates = await this.getUpdatesOrRetryNetworkFailure(abort.signal);
 
       for (const update of updates) {
         this.nextUpdateOffset = update.update_id + 1;
         await onUpdate(update);
       }
     }
+  }
+
+  private async getUpdatesOrRetryNetworkFailure(signal: AbortSignal): Promise<TelegramUpdate[]> {
+    while (!signal.aborted) {
+      try {
+        return await this.getUpdatesOrThrowFriendlyConflict();
+      } catch (error) {
+        if (!isFetchNetworkError(error)) throw error;
+        const retryDelayMs = this.config.polling?.retryDelayMs ?? DEFAULT_POLLING_RETRY_DELAY_MS;
+        console.error(`[telegram] getUpdates network error (${describeFetchFailure(error)}); retrying in ${retryDelayMs}ms`);
+        await waitForRetry(retryDelayMs, signal);
+      }
+    }
+    return [];
   }
 
   private async getUpdatesOrThrowFriendlyConflict(): Promise<TelegramUpdate[]> {
@@ -243,6 +263,29 @@ export class TelegramAdapter implements ChannelAdapter {
     const [, permissionId, choice] = match;
     if (!permissionId || (choice !== "approve" && choice !== "deny")) return null;
     return { permissionId, choice };
+  }
+}
+
+function isFetchNetworkError(error: unknown): boolean {
+  return error instanceof TypeError && error.message === "fetch failed";
+}
+
+function describeFetchFailure(error: unknown): string {
+  const cause = error instanceof Error ? error.cause : undefined;
+  if (cause && typeof cause === "object") {
+    const code = "code" in cause && typeof cause.code === "string" ? cause.code : undefined;
+    const message = "message" in cause && typeof cause.message === "string" ? cause.message : undefined;
+    return [code, message].filter(Boolean).join(": ") || "fetch failed";
+  }
+  return error instanceof Error ? error.message : String(error);
+}
+
+async function waitForRetry(delayMs: number, signal: AbortSignal): Promise<void> {
+  try {
+    await sleep(delayMs, undefined, { signal });
+  } catch (error) {
+    if (signal.aborted) return;
+    throw error;
   }
 }
 

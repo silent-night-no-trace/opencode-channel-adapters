@@ -8,6 +8,17 @@ import type {
   TelegramSendMessageResult,
   TelegramUpdate,
 } from "./types.js";
+import { ProxyAgent, type Dispatcher } from "undici";
+
+export type TelegramApiOptions = {
+  fetchImpl?: typeof fetch;
+  dispatcher?: Dispatcher;
+  proxyUrl?: string;
+};
+
+type UndiciFetchInit = RequestInit & {
+  dispatcher?: Dispatcher;
+};
 
 export type TelegramSendMessageInput = {
   chatId: string;
@@ -44,10 +55,18 @@ export function isTelegramGetUpdatesConflict(error: unknown): boolean {
 export class TelegramApi {
   private readonly baseUrl: string;
   private readonly fetchImpl: typeof fetch;
+  private readonly dispatcher: Dispatcher | undefined;
 
-  constructor(botToken: string, fetchImpl: typeof fetch = fetch) {
+  constructor(botToken: string, options: TelegramApiOptions | typeof fetch = {}) {
     this.baseUrl = `https://api.telegram.org/bot${botToken}`;
-    this.fetchImpl = fetchImpl;
+    if (typeof options === "function") {
+      this.fetchImpl = options;
+      this.dispatcher = undefined;
+      return;
+    }
+
+    this.fetchImpl = options.fetchImpl ?? fetch;
+    this.dispatcher = options.dispatcher ?? (options.proxyUrl ? new ProxyAgent(options.proxyUrl) : undefined);
   }
 
   async sendMessage(input: TelegramSendMessageInput): Promise<TelegramMessage> {
@@ -97,11 +116,14 @@ export class TelegramApi {
   }
 
   private async call<T extends { ok: boolean; description?: string }>(method: string, payload: unknown): Promise<T> {
-    const response = await this.fetchImpl(`${this.baseUrl}/${method}`, {
+    const init: UndiciFetchInit = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
-    });
+    };
+    if (this.dispatcher) init.dispatcher = this.dispatcher;
+
+    const response = await this.fetchImpl(`${this.baseUrl}/${method}`, init);
     const json = await response.json() as T;
     if (!response.ok || !json.ok) {
       throw new TelegramApiError(method, response.status, json.description ?? response.statusText);

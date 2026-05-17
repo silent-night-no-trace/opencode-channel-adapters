@@ -29,6 +29,8 @@ await testRuntimeRoutesEventsToAdapter();
 await testPermissionCallback();
 await testTelegramSessionSelectionCallback();
 await testTelegramPollingConflictDetection();
+await testTelegramPollingRetriesFetchFailure();
+await testTelegramApiUsesDispatcher();
 await testOpencodeHttpBridgeShapes();
 await testOpencodeHttpBridgeUsesLongPromptDispatcher();
 await testOpencodeHttpBridgeWaitsForSlowPromptHeaders();
@@ -287,6 +289,58 @@ async function testTelegramPollingConflictDetection() {
   );
 }
 
+async function testTelegramPollingRetriesFetchFailure() {
+  let calls = 0;
+  const adapter = new TelegramAdapter({
+    botToken: "token",
+    polling: { retryDelayMs: 0 },
+    fetchImpl: async () => {
+      calls += 1;
+      if (calls === 1) {
+        throw new TypeError("fetch failed", { cause: Object.assign(new Error("socket closed"), { code: "UND_ERR_SOCKET" }) });
+      }
+      return new Response(JSON.stringify({
+        ok: true,
+        result: [{
+          update_id: 10,
+          message: {
+            message_id: 20,
+            from: { id: 30, first_name: "Dev" },
+            chat: { id: 100, type: "private" },
+            text: "hello",
+          },
+        }],
+      }), { status: 200 });
+    },
+  });
+
+  const handledUpdates = [];
+  await adapter.startPolling(async (update) => {
+    handledUpdates.push(update.update_id);
+    await adapter.stop();
+  });
+
+  assert.deepEqual(handledUpdates, [10]);
+  assert.equal(calls, 2);
+}
+
+async function testTelegramApiUsesDispatcher() {
+  const dispatcher = {
+    dispatch() {
+      throw new Error("dispatcher should be passed to fetch, not called by this test double");
+    },
+  };
+  const api = new TelegramApi("token", {
+    dispatcher,
+    fetchImpl: async (_url, init) => {
+      assert.equal(init?.dispatcher, dispatcher);
+      return jsonResponse({ ok: true, result: [] });
+    },
+  });
+
+  assert.deepEqual(await api.getUpdates(), []);
+}
+
 async function testOpencodeHttpBridgeShapes() {
   const calls = [];
   const encoder = new TextEncoder();
@@ -502,7 +556,7 @@ async function testConfigFileAndEnvMerge() {
       "opencode": { "baseUrl": "http://file:4096", "password": "file-password" },
       "storage": { "sessionStore": "./file-sessions.json" },
       "channels": {
-        "telegram": { "botToken": "file-token", "allowedChatIds": ["1"] },
+        "telegram": { "botToken": "file-token", "allowedChatIds": ["1"], "proxyUrl": "http://file-proxy:7890", "polling": { "retryDelayMs": 1234 } },
         "feishu": { "enabled": false, "appId": "future" },
         "discord": { "enabled": false, "applicationId": "future" }
       }
@@ -513,15 +567,18 @@ async function testConfigFileAndEnvMerge() {
       OPENCODE_BASE_URL: "http://env:4096",
       TELEGRAM_BOT_TOKEN: "env-token",
       TELEGRAM_ALLOWED_CHAT_IDS: "2,3",
+      TELEGRAM_PROXY_URL: "http://user:pass@env-proxy:7890",
     });
     const runtime = resolveTelegramRuntimeConfig(merged);
-    const discordRuntime = resolveDiscordRuntimeConfig(mergeConfigWithEnv(loaded.config, {
+    const discordMerged = mergeConfigWithEnv(loaded.config, {
       DISCORD_BOT_TOKEN: "discord-env-token",
       DISCORD_APPLICATION_ID: "discord-app",
       DISCORD_ALLOWED_GUILD_IDS: "guild-1,guild-2",
       DISCORD_ALLOWED_CHANNEL_IDS: "channel-1",
+      DISCORD_PROXY_URL: "http://discord-proxy:7890",
       DISCORD_IGNORE_BOTS: "false",
-    }));
+    });
+    const discordRuntime = resolveDiscordRuntimeConfig(discordMerged);
     const feishuRuntime = resolveFeishuRuntimeConfig(mergeConfigWithEnv(loaded.config, {
       FEISHU_APP_ID: "feishu-app",
       FEISHU_APP_SECRET: "feishu-secret",
@@ -536,11 +593,14 @@ async function testConfigFileAndEnvMerge() {
     assert.equal(runtime.botToken, "env-token");
     assert.equal(runtime.opencodeBaseUrl, "http://env:4096");
     assert.deepEqual(runtime.allowedChatIds, ["2", "3"]);
+    assert.equal(runtime.proxyUrl, "http://user:pass@env-proxy:7890");
+    assert.equal(runtime.polling.retryDelayMs, 1234);
     assert.equal(runtime.sessionStorePath, "./file-sessions.json");
     assert.equal(discordRuntime.botToken, "discord-env-token");
     assert.equal(discordRuntime.applicationId, "discord-app");
     assert.deepEqual(discordRuntime.allowedGuildIds, ["guild-1", "guild-2"]);
     assert.deepEqual(discordRuntime.allowedChannelIds, ["channel-1"]);
+    assert.equal(discordRuntime.proxyUrl, "http://discord-proxy:7890");
     assert.equal(discordRuntime.ignoreBots, false);
     assert.equal(feishuRuntime.appId, "feishu-app");
     assert.equal(feishuRuntime.appSecret, "feishu-secret");
@@ -551,6 +611,8 @@ async function testConfigFileAndEnvMerge() {
     assert.equal(feishuRuntime.webhookPath, "/events/feishu");
     const redacted = redactConfig(merged);
     assert.equal(redacted.channels.telegram.botToken, "env-***oken");
+    assert.equal(redacted.channels.telegram.proxyUrl, "http***7890");
+    assert.equal(redactConfig(discordMerged).channels.discord.proxyUrl, "http***7890");
     assert.equal(redacted.opencode.password, "file***word");
   } finally {
     await rm(dir, { recursive: true, force: true });

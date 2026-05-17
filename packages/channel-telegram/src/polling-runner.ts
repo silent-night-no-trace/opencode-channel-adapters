@@ -14,6 +14,12 @@ export type TelegramPollingRunnerOptions = {
   opencodePassword?: string;
   sessionStorePath: string;
   allowedChatIds?: readonly string[];
+  proxyUrl?: string;
+  polling?: {
+    timeoutSeconds?: number;
+    limit?: number;
+    retryDelayMs?: number;
+  };
   debug?: boolean;
 };
 
@@ -215,6 +221,8 @@ export function createTelegramRuntime(options: TelegramPollingRunnerOptions): {
   const adapter = new TelegramAdapter({
     botToken: options.botToken,
     ...(options.allowedChatIds ? { allowedChatIds: options.allowedChatIds } : {}),
+    ...(options.proxyUrl ? { proxyUrl: options.proxyUrl } : {}),
+    ...(options.polling ? { polling: options.polling } : {}),
   });
   const runtime = new ChannelRuntime({
     adapter,

@@ -115,6 +115,7 @@ Options:
 
 Environment:
   TELEGRAM_BOT_TOKEN         Telegram Bot API token
+  TELEGRAM_PROXY_URL         Optional Telegram Bot API HTTP(S) proxy URL
   OPENCODE_BASE_URL          opencode server URL, default http://127.0.0.1:4096
   OPENCODE_PASSWORD          Preferred opencode Basic auth password
   OPENCODE_AUTH_HEADER       Full Authorization header override

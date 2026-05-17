@@ -149,6 +149,15 @@ node packages/channel-discord/dist/cli.js --check-config
 node packages/channel-discord/dist/cli.js
 ```
 
+If your network needs the same proxy for Discord REST API calls, set:
+
+```powershell
+$env:DISCORD_PROXY_URL = "http://127.0.0.1:7890"
+node packages/channel-discord/dist/cli.js
+```
+
+This covers Discord HTTP/API requests made by discord.js, such as login-time REST calls, channel fetches, and message sends. Discord Gateway WebSocket connectivity is managed separately inside discord.js.
+
 For Feishu/Lark, fill `channels.feishu.appId`, `channels.feishu.appSecret`, and optionally `channels.feishu.verificationToken`, then run:
 
 ```powershell
@@ -256,6 +265,31 @@ Set the token in the same shell before running `node packages/channel-telegram/d
 - Clear webhooks with `deleteWebhook`; polling and webhook delivery are mutually exclusive.
 - In groups, mention the bot or disable BotFather privacy mode for broader group messages.
 - Check `TELEGRAM_ALLOWED_CHAT_IDS`; an incorrect allowlist silently ignores updates.
+
+### Repeated `getUpdates network error (ECONNRESET: Client network socket disconnected before secure TLS connection was established)`
+
+The adapter is still running and retrying. This error happens before Telegram completes the TLS connection, so it points to network reachability, firewall, DNS, or proxy routing between your machine and `api.telegram.org`.
+
+If Telegram requires a local proxy from your network, set one explicitly for Telegram API calls:
+
+```powershell
+$env:TELEGRAM_PROXY_URL = "http://127.0.0.1:7890"
+opencode-channel-telegram --debug
+```
+
+Or put it in config:
+
+```jsonc
+{
+  "channels": {
+    "telegram": {
+      "proxyUrl": "http://127.0.0.1:7890"
+    }
+  }
+}
+```
+
+`TELEGRAM_PROXY_URL` affects Telegram Bot API requests only. `OPENCODE_BASE_URL` still points to your local or remote opencode server.
 
 ### `Conflict: terminated by other getUpdates request`
 

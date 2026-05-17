@@ -2,9 +2,11 @@ export type TelegramAdapterConfig = {
   botToken: string;
   allowedChatIds?: readonly string[];
   defaultParseMode?: "MarkdownV2" | "HTML";
+  proxyUrl?: string;
   polling?: {
     timeoutSeconds?: number;
     limit?: number;
+    retryDelayMs?: number;
   };
   fetchImpl?: typeof fetch;
 };
