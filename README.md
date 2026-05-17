@@ -10,9 +10,6 @@ Run [opencode](https://opencode.ai/) from Telegram, Discord, or Feishu/Lark.
 
 The fastest path is to run the published npm packages directly. You do **not** need to clone this repository or run `npm install` unless you want to develop the adapters.
 
-## Community support
-
-For community discussion, usage questions, and Chinese-language support, see [linux.do](https://linux.do/).
 
 ## Before you start
 
