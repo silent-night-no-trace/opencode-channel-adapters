@@ -17,9 +17,11 @@
       "enabled": true,
       "botToken": "",
       "allowedChatIds": [],
+      "proxyUrl": "",
       "polling": {
         "timeoutSeconds": 30,
-        "limit": 25
+        "limit": 25,
+        "retryDelayMs": 5000
       }
     },
 
@@ -43,6 +45,7 @@
       "applicationId": "",
       "allowedGuildIds": [],
       "allowedChannelIds": [],
+      "proxyUrl": "",
       "ignoreBots": true
     }
   }

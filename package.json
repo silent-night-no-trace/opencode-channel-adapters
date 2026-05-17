@@ -1,6 +1,6 @@
 {
   "name": "opencode-channel-adapters",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Channel adapters for bridging opencode sessions into Telegram, Discord, and Feishu/Lark.",
   "private": true,
   "license": "MIT",

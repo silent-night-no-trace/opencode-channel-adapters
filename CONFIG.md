@@ -48,9 +48,11 @@ See [`opencode-channel.example.jsonc`](./opencode-channel.example.jsonc).
       "enabled": true,
       "botToken": "",
       "allowedChatIds": [],
+      "proxyUrl": "",
       "polling": {
         "timeoutSeconds": 30,
-        "limit": 25
+        "limit": 25,
+        "retryDelayMs": 5000
       }
     },
     "feishu": {
@@ -114,8 +116,10 @@ Auth precedence at runtime:
 | `enabled` | boolean | No | `true` in example | none | Reserved for future multi-channel runner selection. Current Telegram CLI assumes Telegram is the active channel. |
 | `botToken` | string | Yes for Telegram CLI | unset | `TELEGRAM_BOT_TOKEN` | Telegram Bot API token from `@BotFather`. |
 | `allowedChatIds` | string[] | No | `[]` | `TELEGRAM_ALLOWED_CHAT_IDS` as CSV | Optional allowlist. If set, updates from other chats are ignored. |
+| `proxyUrl` | string | No | unset | `TELEGRAM_PROXY_URL` | Optional HTTP(S) proxy URL used only for Telegram Bot API calls, for example `http://127.0.0.1:7890`. |
 | `polling.timeoutSeconds` | number | No | Telegram API default via adapter | none | Long-poll timeout passed to Telegram `getUpdates`. Example uses `30`. |
 | `polling.limit` | number | No | Telegram API default via adapter | none | Max updates per `getUpdates` call. Example uses `25`. |
+| `polling.retryDelayMs` | number | No | `5000` | none | Delay before retrying Telegram `getUpdates` after a network-level `fetch failed` error. |
 
 Telegram session key format:
 
@@ -158,6 +162,7 @@ These fields configure the Discord adapter.
 | `applicationId` | string | No | unset | Discord application/client ID. Reserved for future slash command registration. |
 | `allowedGuildIds` | string[] | No | `[]` | Optional guild allowlist. |
 | `allowedChannelIds` | string[] | No | `[]` | Optional channel allowlist. |
+| `proxyUrl` | string | No | unset | `DISCORD_PROXY_URL` | Optional HTTP(S) proxy URL used for Discord REST API calls, for example `http://127.0.0.1:7890`. |
 | `ignoreBots` | boolean | No | `true` | `DISCORD_IGNORE_BOTS` | Ignore messages from bot users. Set `false` only for controlled tests. |
 
 Discord requires Gateway intents:
@@ -187,6 +192,7 @@ discord:<channelId>:<threadId-or-default>
 | `CHANNEL_SESSION_STORE` | `storage.sessionStore` |
 | `TELEGRAM_BOT_TOKEN` | `channels.telegram.botToken` |
 | `TELEGRAM_ALLOWED_CHAT_IDS` | `channels.telegram.allowedChatIds` as comma-separated values |
+| `TELEGRAM_PROXY_URL` | `channels.telegram.proxyUrl` |
 | `FEISHU_APP_ID` | `channels.feishu.appId` |
 | `FEISHU_APP_SECRET` | `channels.feishu.appSecret` |
 | `FEISHU_ENCRYPT_KEY` | `channels.feishu.encryptKey` |
@@ -199,6 +205,7 @@ discord:<channelId>:<threadId-or-default>
 | `DISCORD_APPLICATION_ID` | `channels.discord.applicationId` |
 | `DISCORD_ALLOWED_GUILD_IDS` | `channels.discord.allowedGuildIds` as comma-separated values |
 | `DISCORD_ALLOWED_CHANNEL_IDS` | `channels.discord.allowedChannelIds` as comma-separated values |
+| `DISCORD_PROXY_URL` | `channels.discord.proxyUrl` |
 | `DISCORD_IGNORE_BOTS` | `channels.discord.ignoreBots`; truthy values are `1`, `true`, `yes`, `on` |
 
 ## Debug commands
