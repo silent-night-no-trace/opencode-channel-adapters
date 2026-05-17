@@ -3,5 +3,6 @@ export type DiscordAdapterConfig = {
   applicationId?: string;
   allowedGuildIds?: readonly string[];
   allowedChannelIds?: readonly string[];
+  proxyUrl?: string;
   ignoreBots?: boolean;
 };

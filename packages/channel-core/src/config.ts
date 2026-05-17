@@ -24,9 +24,11 @@ export type TelegramChannelConfig = {
   enabled?: boolean;
   botToken?: string;
   allowedChatIds?: string[];
+  proxyUrl?: string;
   polling?: {
     timeoutSeconds?: number;
     limit?: number;
+    retryDelayMs?: number;
   };
 };
 
@@ -50,6 +52,7 @@ export type DiscordChannelConfig = {
   applicationId?: string;
   allowedGuildIds?: string[];
   allowedChannelIds?: string[];
+  proxyUrl?: string;
   ignoreBots?: boolean;
 };
 
@@ -133,6 +136,7 @@ export function mergeConfigWithEnv(
         ...asObject(config.channels?.telegram),
         ...(env.TELEGRAM_BOT_TOKEN ? { botToken: env.TELEGRAM_BOT_TOKEN } : {}),
         ...(telegramAllowedChatIds.length ? { allowedChatIds: telegramAllowedChatIds } : {}),
+        ...(env.TELEGRAM_PROXY_URL ? { proxyUrl: env.TELEGRAM_PROXY_URL } : {}),
       },
       feishu: {
         ...asObject(config.channels?.feishu),
@@ -156,6 +160,7 @@ export function mergeConfigWithEnv(
         ...(env.DISCORD_APPLICATION_ID ? { applicationId: env.DISCORD_APPLICATION_ID } : {}),
         ...(discordAllowedGuildIds.length ? { allowedGuildIds: discordAllowedGuildIds } : {}),
         ...(discordAllowedChannelIds.length ? { allowedChannelIds: discordAllowedChannelIds } : {}),
+        ...(env.DISCORD_PROXY_URL ? { proxyUrl: env.DISCORD_PROXY_URL } : {}),
         ...(env.DISCORD_IGNORE_BOTS ? { ignoreBots: parseBooleanEnv(env.DISCORD_IGNORE_BOTS) } : {}),
       },
     },
@@ -170,6 +175,12 @@ export function resolveTelegramRuntimeConfig(config: OpencodeChannelConfig): {
   opencodePassword?: string;
   sessionStorePath: string;
   allowedChatIds?: string[];
+  proxyUrl?: string;
+  polling?: {
+    timeoutSeconds?: number;
+    limit?: number;
+    retryDelayMs?: number;
+  };
 } {
   const telegram = asObject(config.channels?.telegram);
   const botToken = readString(telegram.botToken);
@@ -180,6 +191,8 @@ export function resolveTelegramRuntimeConfig(config: OpencodeChannelConfig): {
   const opencode = config.opencode ?? {};
   const storage = config.storage ?? {};
   const allowedChatIds = readStringArray(telegram.allowedChatIds);
+  const proxyUrl = readString(telegram.proxyUrl);
+  const polling = readTelegramPollingConfig(telegram.polling);
 
   return {
     botToken,
@@ -189,6 +202,8 @@ export function resolveTelegramRuntimeConfig(config: OpencodeChannelConfig): {
     ...(opencode.password ? { opencodePassword: opencode.password } : {}),
     sessionStorePath: storage.sessionStore ?? "./sessions.json",
     ...(allowedChatIds.length ? { allowedChatIds } : {}),
+    ...(proxyUrl ? { proxyUrl } : {}),
+    ...(polling ? { polling } : {}),
   };
 }
 
@@ -202,6 +217,7 @@ export function resolveDiscordRuntimeConfig(config: OpencodeChannelConfig): {
   sessionStorePath: string;
   allowedGuildIds?: string[];
   allowedChannelIds?: string[];
+  proxyUrl?: string;
   ignoreBots?: boolean;
 } {
   const discord = asObject(config.channels?.discord);
@@ -214,6 +230,7 @@ export function resolveDiscordRuntimeConfig(config: OpencodeChannelConfig): {
   const storage = config.storage ?? {};
   const allowedGuildIds = readStringArray(discord.allowedGuildIds);
   const allowedChannelIds = readStringArray(discord.allowedChannelIds);
+  const proxyUrl = readString(discord.proxyUrl);
   const ignoreBots = typeof discord.ignoreBots === "boolean" ? discord.ignoreBots : undefined;
   const applicationId = readString(discord.applicationId);
 
@@ -227,6 +244,7 @@ export function resolveDiscordRuntimeConfig(config: OpencodeChannelConfig): {
     sessionStorePath: storage.sessionStore ?? "./sessions.json",
     ...(allowedGuildIds.length ? { allowedGuildIds } : {}),
     ...(allowedChannelIds.length ? { allowedChannelIds } : {}),
+    ...(proxyUrl ? { proxyUrl } : {}),
     ...(ignoreBots !== undefined ? { ignoreBots } : {}),
   };
 }
@@ -295,6 +313,7 @@ export function redactConfig(config: OpencodeChannelConfig): OpencodeChannelConf
       telegram: {
         ...telegram,
         ...(typeof telegram.botToken === "string" ? { botToken: redactSecret(telegram.botToken) } : {}),
+        ...(typeof telegram.proxyUrl === "string" ? { proxyUrl: redactSecret(telegram.proxyUrl) } : {}),
       },
       feishu: {
         ...feishu,
@@ -305,6 +324,7 @@ export function redactConfig(config: OpencodeChannelConfig): OpencodeChannelConf
       discord: {
         ...discord,
         ...(typeof discord.botToken === "string" ? { botToken: redactSecret(discord.botToken) } : {}),
+        ...(typeof discord.proxyUrl === "string" ? { proxyUrl: redactSecret(discord.proxyUrl) } : {}),
       },
     },
   };
@@ -347,6 +367,23 @@ function readString(value: unknown): string | undefined {
 function readStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === "string" && item.length > 0);
+}
+
+function readTelegramPollingConfig(value: unknown): TelegramChannelConfig["polling"] {
+  const polling = asObject(value);
+  const timeoutSeconds = readNumber(polling.timeoutSeconds);
+  const limit = readNumber(polling.limit);
+  const retryDelayMs = readNumber(polling.retryDelayMs);
+  const result = {
+    ...(timeoutSeconds !== undefined ? { timeoutSeconds } : {}),
+    ...(limit !== undefined ? { limit } : {}),
+    ...(retryDelayMs !== undefined ? { retryDelayMs } : {}),
+  };
+  return Object.keys(result).length ? result : undefined;
+}
+
+function readNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
 function splitCsv(value: string | undefined): string[] {

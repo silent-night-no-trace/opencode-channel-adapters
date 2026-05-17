@@ -22,6 +22,7 @@ import {
   type SendableChannels,
   type TextBasedChannel,
 } from "discord.js";
+import { ProxyAgent } from "undici";
 import type { DiscordAdapterConfig } from "./types.js";
 
 export class DiscordAdapter implements ChannelAdapter {
@@ -39,6 +40,7 @@ export class DiscordAdapter implements ChannelAdapter {
         GatewayIntentBits.MessageContent,
       ],
       partials: [Partials.Channel],
+      ...(config.proxyUrl ? { rest: { agent: new ProxyAgent(config.proxyUrl) } } : {}),
     });
     this.allowedGuildIds = config.allowedGuildIds ? new Set(config.allowedGuildIds) : undefined;
     this.allowedChannelIds = config.allowedChannelIds ? new Set(config.allowedChannelIds) : undefined;

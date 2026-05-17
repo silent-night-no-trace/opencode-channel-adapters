@@ -15,6 +15,7 @@ export type DiscordRunnerOptions = {
   sessionStorePath: string;
   allowedGuildIds?: readonly string[];
   allowedChannelIds?: readonly string[];
+  proxyUrl?: string;
   ignoreBots?: boolean;
 };
 
@@ -28,6 +29,7 @@ export function createDiscordRuntime(options: DiscordRunnerOptions): {
     ...(options.applicationId ? { applicationId: options.applicationId } : {}),
     ...(options.allowedGuildIds ? { allowedGuildIds: options.allowedGuildIds } : {}),
     ...(options.allowedChannelIds ? { allowedChannelIds: options.allowedChannelIds } : {}),
+    ...(options.proxyUrl ? { proxyUrl: options.proxyUrl } : {}),
     ...(options.ignoreBots !== undefined ? { ignoreBots: options.ignoreBots } : {}),
   });
   const runtime = new ChannelRuntime({
