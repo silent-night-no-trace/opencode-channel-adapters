@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning for published packages.
 
+## 0.2.1
+
+- Published the 0.2 workspace release to the official npm registry.
+- Aligned workspace package versions so every public package ships as 0.2.1.
+
 ## 0.2.0
 
 - Added optional HTTP(S) proxy support for Telegram Bot API and Discord REST traffic.
